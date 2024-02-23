@@ -27,21 +27,21 @@ pipeline {
         stage('Run Packer Init') {
             steps {
                 sh '''
-                sudo packer init ./packer/builds
+                packer init ./packer/builds
                 '''
             }
         }
         stage('Run Packer Validate') {
             steps {
                 sh '''
-                sudo packer validate ./packer/builds
+                packer validate ./packer/builds
                 '''
             }
         }
         stage('Run Packer Build') {
             steps {
                 sh '''
-                sudo packer build \
+                packer build \
                 -var "azure_tenant_id=$AZURE_TENANT_ID" \
                 -var "azure_subscription_id=$AZURE_SUBSCRIPTION_ID" \
                 -var "azure_client_id=$AZURE_CLIENT_ID" \
