@@ -9,6 +9,23 @@ pipeline {
         AZURE_CLIENT_SECRET = credentials('azure_client_secret')
     }
     stages {
+        stage('Create Azure Resource Group') {
+            steps {
+                sh '''
+                az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant AZURE_TENANT_ID
+
+                az group show --name packer-rg &>/dev/null
+
+                if [ $? != 0 ]; then
+                    # Resource group does not exist, create it
+                    az group create --name packer-rg --location $location
+                    echo "Resource group 'packer-rg' created."
+                else
+                    echo "Resource group 'packer-rg' already exists."
+                fi
+                '''
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [cleanBeforeCheckout()], userRemoteConfigs: [[url: 'https://github.com/benjamin-lykins/demo-jenkins-packer.git']])
