@@ -16,7 +16,7 @@ pipeline {
                 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
                 # Login to Azure
-                az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant AZURE_TENANT_ID
+                az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
 
                 # 
                 az group show --name packer-rg &>/dev/null
