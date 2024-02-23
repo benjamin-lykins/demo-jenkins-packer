@@ -1,38 +1,36 @@
 pipeline {
-    agent any
-    
-    environment {
-        PACKER_BINARY = 'packer'
-        PACKER_TEMPLATE = 'path/to/your/packer/template.json'
+    agent {
+        label 'packer'
     }
-    
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scmGit(branches: [[name: '*/main']], extensions: [cleanBeforeCheckout()], userRemoteConfigs: [[url: 'https://github.com/benjamin-lykins/demo-jenkins-packer.git']])
             }
         }
-        
-        stage('Build Packer Image') {
+        stage('Download Packer') {
             steps {
-                script {
-                    // Validate the Packer template
-                    sh "${env.PACKER_BINARY} validate ${env.PACKER_TEMPLATE}"
-                    
-                    // If validation passes, build the image
-                    if (env.BUILD_STATUS == 0) {
-                        sh "${env.PACKER_BINARY} build ${env.PACKER_TEMPLATE}"
-                    } else {
-                        error "Packer template validation failed!"
-                    }
-                }
+                sh '''
+                sudo wget -qO - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg --yes
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt purge --auto-remove -y packer
+                sudo apt update && sudo apt install -y packer
+                '''
             }
         }
-    }
-    
-    post {
-        always {
-            // Cleanup any artifacts or temporary files if necessary
+        stage('Run Packer Init') {
+            steps {
+                sh '''
+                sudo packer init ./packer/builds
+                '''
+            }
+        }
+        stage('Run Packer Validate') {
+            steps {
+                sh '''
+                sudo packer validate ./packer/builds
+                '''
+            }
         }
     }
 }
