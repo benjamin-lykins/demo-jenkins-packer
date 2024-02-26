@@ -4,6 +4,10 @@ packer {
       source  = "github.com/hashicorp/azure"
       version = "~> 2"
     }
+        amazon = {
+      source  = "github.com/hashicorp/amazon"
+      version = "~> 1"
+    }
   }
 }
 
@@ -34,6 +38,22 @@ variable "azure_client_secret" {
   type    = string
   description = "The client secret of the service principal."
   default = ""
+}
+
+source "amazon-ebs" "suse" {
+  ami_name      = "suse-image-${local.time}"
+  instance_type = "t2.micro"
+  region        = "us-east-2"
+  source_ami_filter {
+    filters = {
+      name                = "openSUSE-Leap-*-hvm-ssd-x86_64-*"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+    most_recent = true
+    owners      = ["679593333241"]
+  }
+  ssh_username = "packer"
 }
 
 source "azure-arm" "suse" {
@@ -71,13 +91,9 @@ source "azure-arm" "suse" {
 
 
 build {
-  sources = ["source.azure-arm.suse"]
+  sources = ["source.azure-arm.suse", "source.amazon-ebs.suse"]
 
   provisioner "shell" {
     inline = ["echo foo"]
 }
-
-
-
-
 }
