@@ -1,3 +1,5 @@
+// This is a Packer template for building a SUSE image on AWS and Azure.
+
 packer {
   required_plugins {
     azure = {
