@@ -47,13 +47,8 @@ source "amazon-ebs" "suse" {
   instance_type = "t2.micro"
   region        = "us-east-2"
   ssh_username  = "ec2-user"
-
-  vpc_id        = "vpc-065c31f1fa9015de5"
-  subnet_id     = "subnet-04f4493d178e64b10"
-  associate_public_ip_address = true
   
-
-  source_ami_filter {
+ source_ami_filter {
     filters = {
       name                = "openSUSE-Leap-*-hvm-ssd-x86_64-*"
       root-device-type    = "ebs"
