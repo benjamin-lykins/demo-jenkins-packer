@@ -56,7 +56,7 @@ pipeline {
         stage('Run Packer Init') {
             steps {
                 sh '''
-                packer init ./packer/builds
+                packer init -upgrade ./packer/builds
                 '''
             }
         }
@@ -78,6 +78,12 @@ pipeline {
                 ./packer/builds/builds_suse.pkr.hcl
                 '''
             }
+        }
+    }
+    post {
+        // Clean after build
+        always {
+            cleanWs notFailBuild: true
         }
     }
 }
