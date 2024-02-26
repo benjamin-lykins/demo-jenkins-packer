@@ -50,6 +50,8 @@ source "amazon-ebs" "suse" {
 
   vpc_id        = "vpc-065c31f1fa9015de5"
   subnet_id     = "subnet-04f4493d178e64b10"
+  associate_public_ip_address = true
+  
 
   source_ami_filter {
     filters = {
