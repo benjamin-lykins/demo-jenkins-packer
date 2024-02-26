@@ -54,6 +54,7 @@ source "amazon-ebs" "suse" {
     }
     most_recent = true
     owners      = ["679593333241"]
+    ssh_username = "root"
   }
 }
 
