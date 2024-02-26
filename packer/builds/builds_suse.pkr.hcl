@@ -46,6 +46,8 @@ source "amazon-ebs" "suse" {
   ami_name      = "suse-image-${local.time}"
   instance_type = "t2.micro"
   region        = "us-east-2"
+  ssh_username  = "linux"
+
   source_ami_filter {
     filters = {
       name                = "openSUSE-Leap-*-hvm-ssd-x86_64-*"
@@ -54,7 +56,6 @@ source "amazon-ebs" "suse" {
     }
     most_recent = true
     owners      = ["679593333241"]
-    ssh_username = "root"
   }
 }
 
