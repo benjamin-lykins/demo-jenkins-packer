@@ -46,7 +46,7 @@ source "amazon-ebs" "suse" {
   ami_name      = "suse-image-${local.time}"
   instance_type = "t2.micro"
   region        = "us-east-2"
-  ssh_username  = "linux"
+  ssh_username  = "ec2-user"
 
   source_ami_filter {
     filters = {
