@@ -38,11 +38,6 @@ pipeline {
            }
         }
     }
-        stage('Checkout') {
-            steps {
-                checkout scmGit(extensions: [cleanBeforeCheckout()], userRemoteConfigs: [[url: 'https://github.com/benjamin-lykins/demo-jenkins-packer.git']])
-            }
-        }
         stage('Download Packer') {
             steps {
                 sh '''
